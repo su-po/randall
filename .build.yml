@@ -1,0 +1,16 @@
+image: alpine/edge
+secrets:
+  - 371015bb-35dd-491c-bf90-270cd73192cb
+sources:
+  - git+ssh://git@git.sr.ht/~sutra/randall
+tasks:
+  - check: |
+      cd randall
+      if [ "$(git rev-parse origin/main)" != "$(git rev-parse HEAD)" ]; then \
+        complete-build; \
+      fi
+  - mirror: |
+      cd randall 
+      git remote add github git@github.com:su-po/randall.git
+      ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+      git push github main
